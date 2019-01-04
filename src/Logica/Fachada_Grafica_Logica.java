@@ -1,11 +1,14 @@
 package Logica;
 
+import Grafica.VentanaPartida;
+
 public class Fachada_Grafica_Logica {
 
     private static Fachada_Grafica_Logica fgl = null;
     private Jugador jugador;
     private int turno;
     public Partida partida = new Partida(jugador, turno);
+    public VentanaPartida vp;
 
     private Fachada_Grafica_Logica() {
         super();

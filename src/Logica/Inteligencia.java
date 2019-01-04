@@ -96,4 +96,15 @@ public class Inteligencia {
             }
         }
     }
+
+    public boolean aceptar_envido(){
+        Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
+        return posible_envido() || fgl.partida.getPuntaje_humano() == 39;
+        //RETORNA true SI LA INTELIGENCIA TIENE PUNTAJE COMO PARA JUGAR EL ENVIDO
+        //O AL JUGADOR HUMANO LE FALTA UN PUNTO PARA GANAR.
+    
+    }
+    
+    
+
 }

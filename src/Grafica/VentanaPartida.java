@@ -5,22 +5,23 @@
  */
 package Grafica;
 
+import Logica.Fachada_Grafica_Logica;
+
 /**
  *
  * @author 44777219
  */
 public class VentanaPartida extends javax.swing.JFrame {
-    public static int LBL_MUESTRA=1;
-    public static int LBL_MANO_HUM_1=2;
-    public static int LBL_MANO_HUM_2=3;
-    public static int LBL_MANO_HUM_3=4;
-    public static int LBL_MANO_IA_1=5;
-    public static int LBL_MANO_IA_2=6;
-    public static int LBL_MANO_IA_3=7;
-    public static int LBL_ACTIVA_IA=8;
-    public static int LBL_ACTIVA_HUM=9;
-    
-    
+
+    public static int LBL_MUESTRA = 1;
+    public static int LBL_MANO_HUM_1 = 2;
+    public static int LBL_MANO_HUM_2 = 3;
+    public static int LBL_MANO_HUM_3 = 4;
+    public static int LBL_MANO_IA_1 = 5;
+    public static int LBL_MANO_IA_2 = 6;
+    public static int LBL_MANO_IA_3 = 7;
+    public static int LBL_ACTIVA_IA = 8;
+    public static int LBL_ACTIVA_HUM = 9;
 
     /**
      * Creates new form VentanaPartida
@@ -33,8 +34,8 @@ public class VentanaPartida extends javax.swing.JFrame {
     }
 
     //metodos para cargar texto a las label(es de prueba)
-    public void cargar_lbl(String texto, int lbl){
-        switch(lbl){
+    public void cargar_lbl(String texto, int lbl) {
+        switch (lbl) {
             case 1://muestra
                 lbl_carta_muestra.setText(texto);
                 break;
@@ -62,15 +63,27 @@ public class VentanaPartida extends javax.swing.JFrame {
             case 9://ACTIVA HUMANO
                 lbl_carta_activa_humano.setText(texto);
                 break;
-                
-        }
-    } 
 
-    public void actualizar_puntajes(int pts_humano, int pts_ia){
-    lbl_pts_yo.setText(String.valueOf(pts_humano));
-    lbl_pts_el.setText(String.valueOf(pts_ia));
-            }
-    
+        }
+    }
+
+    public void actualizar_cartas_lbl() {
+        Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
+        cargar_lbl(fgl.partida.getMuestra().toString(), VentanaPartida.LBL_MUESTRA);
+        cargar_lbl(fgl.partida.getMano_humano().getCartas_mano()[0].toString(), VentanaPartida.LBL_MANO_HUM_1);
+        cargar_lbl(fgl.partida.getMano_humano().getCartas_mano()[1].toString(), VentanaPartida.LBL_MANO_HUM_2);
+        cargar_lbl(fgl.partida.getMano_humano().getCartas_mano()[2].toString(), VentanaPartida.LBL_MANO_HUM_3);
+        cargar_lbl(fgl.partida.getMano_ia().getCartas_mano()[0].toString(), VentanaPartida.LBL_MANO_IA_1);
+        cargar_lbl(fgl.partida.getMano_ia().getCartas_mano()[1].toString(), VentanaPartida.LBL_MANO_IA_2);
+        cargar_lbl(fgl.partida.getMano_ia().getCartas_mano()[2].toString(), VentanaPartida.LBL_MANO_IA_3);
+        
+    }
+
+    public void actualizar_puntajes(int pts_humano, int pts_ia) {
+        lbl_pts_yo.setText(String.valueOf(pts_humano));
+        lbl_pts_el.setText(String.valueOf(pts_ia));
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
