@@ -1,5 +1,6 @@
 package Logica;
 
+import Grafica.MensajeEnvido;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -75,10 +76,12 @@ public class Inteligencia {
         Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
         Scanner teclado = new Scanner(System.in);
         if (this.posible_envido()) {
-            System.out.println("ENVIDO?");
-            System.out.println("1- QUIERO   -   2- NO QUIERO");
-            int quiero = teclado.nextInt();
-            if (quiero == 1) {
+//            System.out.println("ENVIDO?");
+//            System.out.println("1- QUIERO   -   2- NO QUIERO");
+//            int quiero = teclado.nextInt();
+            MensajeEnvido me = new MensajeEnvido(null, true);
+            me.setVisible(true);
+            if (me.isEnvido()) {
                 System.out.println("QUIERO");
                 if (fgl.partida.getMano_ia().puntaje_envido(fgl.partida.getMuestra()) > fgl.partida.getMano_humano().puntaje_envido(fgl.partida.getMuestra())) {
                     fgl.partida.setPuntaje_ia(fgl.partida.getPuntaje_ia() + 2);
