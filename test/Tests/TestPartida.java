@@ -39,10 +39,10 @@ public class TestPartida {
                 fgl.partida.setMazo(new Mazo());
                 fgl.partida.getMazo().generar_mazo_completo();
                 fgl.partida.barajar_mazo();
-
                 fgl.partida.repartir_cartas(true);
                 
                 vp.actualizar_cartas_lbl();
+//                fgl.partida.getJugador_inteligencia().jugar_mayor_carta();
                 vp.actualizar_puntajes(fgl.partida.getPuntaje_humano(), fgl.partida.getPuntaje_ia());
 //                Thread.sleep(100);
 

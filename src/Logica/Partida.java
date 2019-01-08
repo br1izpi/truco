@@ -1,6 +1,7 @@
 package Logica;
 
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 public class Partida {
 
@@ -21,6 +22,8 @@ public class Partida {
     private boolean turno_jug_ia;
     private boolean mazo_barajado;
     private boolean cartas_repartidas;
+    private int parcial_ia;//para ir contablizando las manos ganadas
+    private int parcial_hum;
 
     public Partida(Jugador jugador_humano, int turno) {
         this.jugador_humano = jugador_humano;
@@ -43,9 +46,9 @@ public class Partida {
         }
         this.mazo_barajado = false;
         this.cartas_repartidas = false;
+        this.parcial_hum = 0;
+        this.parcial_ia = 0;
     }
-
-   
 
     public Jugador getJugador_humano() {
         return jugador_humano;
@@ -159,6 +162,23 @@ public class Partida {
         this.cartas_repartidas = cartas_repartidas;
     }
 
+    public int getParcial_ia() {
+        return parcial_ia;
+    }
+
+    public void setParcial_ia(int parcial_ia) {
+        this.parcial_ia = parcial_ia;
+    }
+
+    public int getParcial_hum() {
+        return parcial_hum;
+    }
+
+    public void setParcial_hum(int parcial_hum) {
+        this.parcial_hum = parcial_hum;
+    }
+
+    //OTROS MÉTODOS
     public void barajar_mazo() {
         this.getMazo().barajar();
         this.mazo_barajado = true;
@@ -180,6 +200,7 @@ public class Partida {
                 this.muestra = this.mazo.extraer_carta();
             }
         } else {
+            JOptionPane.showConfirmDialog(null, "MAZO NO BARAJADO");
         }
     }
 
@@ -195,6 +216,7 @@ public class Partida {
         System.out.println("*** MUESTRA ***");
         System.out.println(this.muestra.toString());
     }
+
     public void muestra_cartas_humano_muestra() {
         System.out.println("*** CARTAS DEL HUMANO ***");
         for (Carta i : mano_humano.getCartas_mano()) {
@@ -204,5 +226,20 @@ public class Partida {
         System.out.println(this.muestra.toString());
     }
 
-    
+    void validar_flor_ia() {//DE PRUEBA. HACER UNO QUE SE AJUSTE A LA REALIDAD
+        Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
+        if (this.mano_humano.tiene_flor(muestra)) {
+            if (this.mano_humano.puntaje_flor(muestra) > this.mano_ia.puntaje_flor(muestra)) {
+                fgl.vp.cargar_mensaje_ia("Ganaste los puntos de la flor.");
+                fgl.partida.setPuntaje_humano(fgl.partida.getPuntaje_humano() + 3);
+            } else {
+                fgl.vp.cargar_mensaje_ia("Gané con " + this.mano_ia.puntaje_flor(muestra));
+                fgl.partida.setPuntaje_ia(fgl.partida.getPuntaje_ia() + 3);
+            }
+        } else {//si el humano no tiene flor
+            fgl.partida.setPuntaje_ia(fgl.partida.getPuntaje_ia() + 3);
+        }
+        fgl.vp.actualizar_puntajes(fgl.partida.getPuntaje_humano(), fgl.partida.getPuntaje_ia());
+    }
+
 }

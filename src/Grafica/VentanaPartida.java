@@ -6,6 +6,11 @@
 package Grafica;
 
 import Logica.Fachada_Grafica_Logica;
+import Logica.Mazo;
+import Logica.Partida;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,9 +33,11 @@ public class VentanaPartida extends javax.swing.JFrame {
      */
     public VentanaPartida() {
         initComponents();
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        panel_opciones.setVisible(false);
+
     }
 
     //metodos para cargar texto a las label(es de prueba)
@@ -67,6 +74,10 @@ public class VentanaPartida extends javax.swing.JFrame {
         }
     }
 
+    public void cargar_mensaje_ia(String msj) {
+        lbl_msj_ia.setText(msj);
+    }
+
     public void actualizar_cartas_lbl() {
         Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
         cargar_lbl(fgl.partida.getMuestra().toString(), VentanaPartida.LBL_MUESTRA);
@@ -76,12 +87,21 @@ public class VentanaPartida extends javax.swing.JFrame {
         cargar_lbl(fgl.partida.getMano_ia().getCartas_mano()[0].toString(), VentanaPartida.LBL_MANO_IA_1);
         cargar_lbl(fgl.partida.getMano_ia().getCartas_mano()[1].toString(), VentanaPartida.LBL_MANO_IA_2);
         cargar_lbl(fgl.partida.getMano_ia().getCartas_mano()[2].toString(), VentanaPartida.LBL_MANO_IA_3);
-        
+
     }
 
     public void actualizar_puntajes(int pts_humano, int pts_ia) {
-        lbl_pts_yo.setText(String.valueOf(pts_humano));
-        lbl_pts_el.setText(String.valueOf(pts_ia));
+        if(pts_humano < Partida.MAX_PUNTAJE && pts_ia < Partida.MAX_PUNTAJE){
+            lbl_pts_yo.setText(String.valueOf(pts_humano));
+            lbl_pts_el.setText(String.valueOf(pts_ia));
+        }else if(pts_humano > pts_ia){
+            JOptionPane.showMessageDialog(null, "HAS GANADO EL TRUCO!");
+            System.exit(0);
+        }else{
+            JOptionPane.showMessageDialog(this, "HAS PERDIDO EL TRUCO...");
+            System.exit(0);
+        }
+        
     }
 
     /**
@@ -113,6 +133,13 @@ public class VentanaPartida extends javax.swing.JFrame {
         lbl_carta_activa_ia = new javax.swing.JLabel();
         lbl_carta_activa_humano = new javax.swing.JLabel();
         lbl_carta_muestra = new javax.swing.JLabel();
+        panel_opciones = new javax.swing.JPanel();
+        btn_envido = new javax.swing.JButton();
+        btn_flor = new javax.swing.JButton();
+        btn_truco = new javax.swing.JButton();
+        lbl_msj_ia = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        btn_irse = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1000, 700));
@@ -293,10 +320,165 @@ public class VentanaPartida extends javax.swing.JFrame {
         lbl_carta_muestra.setPreferredSize(new java.awt.Dimension(150, 200));
         panel_fondo.add(lbl_carta_muestra, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 80, 150, 190));
 
+        panel_opciones.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panel_opciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                panel_opcionesMouseExited(evt);
+            }
+        });
+
+        btn_envido.setText("Envido");
+        btn_envido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_envidoActionPerformed(evt);
+            }
+        });
+
+        btn_flor.setText("Flor");
+        btn_flor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_florActionPerformed(evt);
+            }
+        });
+
+        btn_truco.setText("Truco");
+        btn_truco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_trucoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel_opcionesLayout = new javax.swing.GroupLayout(panel_opciones);
+        panel_opciones.setLayout(panel_opcionesLayout);
+        panel_opcionesLayout.setHorizontalGroup(
+            panel_opcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_opcionesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btn_envido, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_flor, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_truco, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(188, Short.MAX_VALUE))
+        );
+        panel_opcionesLayout.setVerticalGroup(
+            panel_opcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_opcionesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_opcionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_envido)
+                    .addComponent(btn_flor)
+                    .addComponent(btn_truco))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+
+        panel_fondo.add(panel_opciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 370, 420, 70));
+        panel_fondo.add(lbl_msj_ia, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 240, 190, 30));
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Icons/ico_opciones.png"))); // NOI18N
+        jButton1.setBorder(null);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton1MouseEntered(evt);
+            }
+        });
+        panel_fondo.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 60, 60));
+
+        btn_irse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Icons/salir.png"))); // NOI18N
+        btn_irse.setBorder(null);
+        btn_irse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_irseActionPerformed(evt);
+            }
+        });
+        panel_fondo.add(btn_irse, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 620, -1, -1));
+
         getContentPane().add(panel_fondo);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+       
+    private void btn_envidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_envidoActionPerformed
+        // TODO add your handling code here:
+        Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
+        if (fgl.partida.getJugador_inteligencia().aceptar_envido()) {
+            cargar_mensaje_ia("Quiero!");
+            int pts_hum = fgl.partida.getMano_humano().puntaje_envido(fgl.partida.getMuestra());
+            int pts_ia = fgl.partida.getMano_ia().puntaje_envido(fgl.partida.getMuestra());
+            if (pts_ia > pts_hum) {
+                //! FALTA CONTROLAR QUIEN ES EL GANADOR EN CASO DE EMPATE. QUIEN ES MANO, por ahora gana el humano.
+                cargar_mensaje_ia("Gané con " + pts_ia);
+                fgl.partida.setPuntaje_ia(fgl.partida.getPuntaje_ia() + 2);
+            } else {//gana el humano
+                cargar_mensaje_ia("Son buenas...");
+                fgl.partida.setPuntaje_humano(fgl.partida.getPuntaje_humano() + 2);
+
+            }
+        } else {
+            //si no quiere
+            cargar_mensaje_ia("No quiero");
+            fgl.partida.setPuntaje_humano(fgl.partida.getPuntaje_humano() + 1);
+
+        }
+
+        actualizar_puntajes(fgl.partida.getPuntaje_humano(), fgl.partida.getPuntaje_ia());
+
+        //al finalizar desaparece el panel
+        panel_opciones.setVisible(false);
+
+    }//GEN-LAST:event_btn_envidoActionPerformed
+
+    private void jButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseEntered
+        // TODO add your handling code here:
+        panel_opciones.setVisible(true);
+    }//GEN-LAST:event_jButton1MouseEntered
+
+    private void btn_florActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_florActionPerformed
+        // TODO add your handling code here:
+        Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
+        if(fgl.partida.getMano_ia().tiene_flor(fgl.partida.getMuestra())){
+            cargar_mensaje_ia("Yo también tengo flor! Y ahora? a programar");
+        }else{
+            cargar_mensaje_ia("Tiene...");
+            fgl.partida.setPuntaje_humano(fgl.partida.getPuntaje_humano()+3);
+        }
+        
+        //despues de hacer lo que haga
+        panel_opciones.setVisible(false);
+        actualizar_puntajes(fgl.partida.getPuntaje_humano(), fgl.partida.getPuntaje_ia());
+    }//GEN-LAST:event_btn_florActionPerformed
+
+    private void btn_trucoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trucoActionPerformed
+        // TODO add your handling code here:
+
+        //despues de hacer lo que haga
+        panel_opciones.setVisible(false);
+    }//GEN-LAST:event_btn_trucoActionPerformed
+
+    private void panel_opcionesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_opcionesMouseExited
+        // CUANDO SALE EL CURSOR DEL PANEL DEBE DESAPARECER
+//        panel_opciones.setVisible(false);
+    }//GEN-LAST:event_panel_opcionesMouseExited
+
+    private void btn_irseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_irseActionPerformed
+        /* El jugador humano se va de la mano
+            la intenligencia gana un punto
+        se baraja y reparte nuevamente
+         */
+        Fachada_Grafica_Logica fgl = Fachada_Grafica_Logica.getSingletonInstancia();
+        fgl.partida.setPuntaje_ia(fgl.partida.getPuntaje_ia() + 1);
+        actualizar_puntajes(fgl.partida.getPuntaje_humano(), fgl.partida.getPuntaje_ia());
+
+        fgl.partida.setMazo(new Mazo());
+        fgl.partida.getMazo().generar_mazo_completo();
+        fgl.partida.barajar_mazo();
+        fgl.partida.repartir_cartas(false);
+        actualizar_cartas_lbl();
+
+    }//GEN-LAST:event_btn_irseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -312,16 +494,24 @@ public class VentanaPartida extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaPartida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPartida.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaPartida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPartida.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaPartida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPartida.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaPartida.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPartida.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -334,6 +524,11 @@ public class VentanaPartida extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_envido;
+    private javax.swing.JButton btn_flor;
+    private javax.swing.JButton btn_irse;
+    private javax.swing.JButton btn_truco;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbl_carta_activa_humano;
     private javax.swing.JLabel lbl_carta_activa_ia;
@@ -346,6 +541,7 @@ public class VentanaPartida extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_carta_muestra;
     private javax.swing.JLabel lbl_el;
     private javax.swing.JLabel lbl_mazo1;
+    private javax.swing.JLabel lbl_msj_ia;
     private javax.swing.JLabel lbl_pts_el;
     private javax.swing.JLabel lbl_pts_yo;
     private javax.swing.JLabel lbl_yo;
@@ -353,6 +549,7 @@ public class VentanaPartida extends javax.swing.JFrame {
     private javax.swing.JPanel panel_mano_humano;
     private javax.swing.JPanel panel_mano_ia;
     private javax.swing.JPanel panel_mazo;
+    private javax.swing.JPanel panel_opciones;
     private javax.swing.JPanel panel_tanteador;
     // End of variables declaration//GEN-END:variables
 }
